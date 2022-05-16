@@ -1,6 +1,6 @@
 # xpc_set_event_stream_handler
 
-Attempt to port the upstream [ObjC handler](xpc/xpc_set_event_stream_handler/main.m) to a [JXA handler](xpc_handler.js). Only concerned with the actual event consumption.
+Attempt to port the upstream [ObjC handler](xpc_set_event_stream_handler/main.m) to a [JXA handler](xpc_handler.js). Only concerned with the actual event consumption.
 
 ### Issues
 
