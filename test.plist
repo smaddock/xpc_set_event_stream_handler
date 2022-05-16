@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>test</string>
+	<key>LaunchEvents</key>
+	<dict>
+		<key>com.apple.notifyd.matching</key>
+		<dict>
+			<key>com.apple.system.config.network_change</key>
+			<dict>
+				<key>Notification</key>
+				<string>com.apple.system.config.network_change</string>
+			</dict>
+		</dict>
+	</dict>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Users/Shared/xpc_set_event_stream_handler</string>
+	</array>
+	<key>StandardErrorPath</key>
+	<string>/Users/Shared/handler.log</string>
+	<key>StandardOutPath</key>
+	<string>/Users/Shared/handler.log</string>
+</dict>
+</plist>
