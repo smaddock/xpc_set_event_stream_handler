@@ -1,6 +1,6 @@
 # xpc_set_event_stream_handler
 
-Attempt to port the upstream [ObjC handler](xpc_set_event_stream_handler/main.m) to a [JXA handler](xpc_handler.js). Only concerned with the actual event consumption.
+Attempt to port the upstream [ObjC handler](xpc_set_event_stream_handler/main.m) to a [JXA handler](xpc_handler.js). Only concerned with the actual event consumption. Thanks to @PicoMitchell for getting this far!
 
 ### Issues
 
@@ -10,23 +10,8 @@ Attempt to port the upstream [ObjC handler](xpc_set_event_stream_handler/main.m)
 - ObjC compiles and works as intended. Changes from upstream:
 	- changed the launch event from `com.apple.iokit.matching` to `com.apple.notifyd.matching`
 	- updated the Xcode recommendations for 13.3
-- `xpc_handler.js` always crashes either osascript or applet:
-	```
-	Crashed Thread:        1  Dispatch queue: com.apple.libdispatch-manager
-
-	Exception Type:        EXC_BAD_ACCESS (SIGBUS)
-	Exception Codes:       KERN_PROTECTION_FAILURE at 0x00007ff852f38cd8
-	Exception Codes:       0x0000000000000002, 0x00007ff852f38cd8
-	Exception Note:        EXC_CORPSE_NOTIFY
-
-	Termination Reason:    Namespace SIGNAL, Code 10 Bus error: 10
-	Terminating Process:   exc handler [9389]
-	```
-	- sometimes also logs error 49 (File «script» is already open)
-	- no difference if called as-is or compiled into an applet
-	- no difference if code-signed with the `xpc_handler.plist` entitlements
-	- `DISPATCH_TIME_FOREVER` constant appears undefined in JXA
-	- tried switching from `dispatch_semaphore` to `dispatch_main` inside a `main` function, but does not execute as intended.
+- `xpc_handler.js` and `xpc_handler2.js` hangs forever
+	- using a while loop does work, but have to account for https://developer.apple.com/forums/thread/133915
 
 ### Documentation:
 
