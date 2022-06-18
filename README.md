@@ -1,61 +1,24 @@
-# xpc_set_event_stream_handler
+# xpc_handler
 
-Attempt to port the upstream [ObjC handler](xpc_set_event_stream_handler/main.m) to a [JXA handler](xpc_handler.js). Only concerned with the actual event consumption. Thanks to @PicoMitchell for getting this far!
+Port of [@snosrap](https://github.com/snosrap)'s [Objective-C XPC event handler](https://github.com/snosrap/xpc_set_event_stream_handler) to a [Javascript for Automation (JXA)](https://developer.apple.com/library/archive/releasenotes/InterapplicationCommunication/RN-JavaScriptForAutomation/Articles/Introduction.html) handler. Many thanks to [@PicoMitchell](https://github.com/PicoMitchell) for the JXA help!
 
-### Issues
+## Notes
 
-- [test.plist](test.plist) LaunchDaemon used for both ObjC and JXA, just change the `ProgramArguments`
-	- designed to fire whenever network config changes (easy to test with turning WiFi on or off)
-	- just using `/Users/Shared` for ease of testing
-- ObjC compiles and works as intended. Changes from upstream:
-	- changed the launch event from `com.apple.iokit.matching` to `com.apple.notifyd.matching`
-	- updated the Xcode recommendations for 13.3
-- `xpc_handler.js` and `xpc_handler2.js` hangs forever
-	- using a while loop does work, but have to account for https://developer.apple.com/forums/thread/133915
+- This example launches on BSD notifications (`com.apple.notifyd.matching`) instead of IOKit events (`com.apple.iokit.matching`) but either or both are possible in the same LaunchDaemon.
+- Why JXA: https://scriptingosx.com/2021/11/the-unexpected-return-of-javascript-for-automation/
+- Why LaunchEvents must be consumed: https://stackoverflow.com/questions/13987671/launchd-plist-runs-every-10-seconds-instead-of-just-once
+- Why the process must not exit after consuming: https://developer.apple.com/forums/thread/133915
+- At WWDC 2022 Apple announced some [changes to how launchd services will be handled in macOS 13](https://developer.apple.com/documentation/servicemanagement/updating_helper_executables_from_earlier_versions_of_macos); it's unclear at the time of writing if this will impact the functionality demonstrated in this repository.
 
-### Documentation:
+## Usage
 
-- `man xpc_events`
-- [xpc_set_event_stream_handler](https://developer.apple.com/documentation/xpc/1505578-xpc_set_event_stream_handler?language=objc)
-- [dispatch_semaphore](https://developer.apple.com/documentation/dispatch/dispatch_semaphore?language=objc)
+To execute this example as-is:
 
-# Upstream README
+- Create a `/usr/local/share/smaddock/` directory owned by root
+- Move `event_processor.sh` and `xpc_handler.js` to that directory
+- Move `com.github.smaddock.xpc_handler.plist` to `/Library/LaunchDaemons/` and change the owner to `root`
+- Run `sudo launchctl bootstrap system/com.github.smaddock.xpc_handler`
+- Turn your WiFi off and on a couple times, and sleep and wake your Mac a couple times
+- Inspect `/private/var/log/smaddock.log` to see the logged events
 
-Consume a `com.apple.iokit.matching` event, then run the executable specified in the first parameter.
-
-This is useful when creating `launchd` LaunchAgents that are triggered by IO events (e.g., run a script when keyboard/mouse attached). Failing to consume the `com.apple.iokit.matching` event will result in the executable being called [repeatedly](https://stackoverflow.com/questions/13987671/launchd-plist-runs-every-10-seconds-instead-of-just-once).
-
-This isn't really documented anywhere other than the `man` page for `xpc_set_event_stream_handler`.
-
-## Example Property List
-
-	<?xml version="1.0" encoding="UTF-8"?>
-	<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-	<plist version="1.0">
-	<dict>
-		<key>Label</key>
-		<string>com.example.KeyboardAttach</string>
-		<key>ProgramArguments</key>
-		<array>
-			<string>/usr/local/bin/xpc_set_event_stream_handler</string>
-			<string>/usr/local/bin/KeyboardAttachScript.sh</string>
-		</array>
-		<key>LaunchEvents</key>
-		<dict>
-			<key>com.apple.iokit.matching</key>
-			<dict>
-				<key>com.example.KeyboardAttach.Event</key>
-				<dict>
-					<key>idVendor</key>
-					<integer>1234</integer>
-					<key>idProduct</key>
-					<integer>56789</integer>
-					<key>IOProviderClass</key>
-					<string>IOUSBDevice</string>
-					<key>IOMatchLaunchStream</key>
-					<true/>
-				</dict>
-			</dict>
-		</dict>
-	</dict>
-	</plist>
+Feel free to use this example per the terms of the included license, although you'll probably want to remove the `smaddock` references from any production use. ;)

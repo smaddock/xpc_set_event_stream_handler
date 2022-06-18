@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>COMMAND_PATH</key>
+		<string>/usr/local/share/smaddock/event_processor.sh</string>
+	</dict>
+	<key>Label</key>
+	<string>com.github.smaddock.xpc_handler</string>
+	<key>LaunchEvents</key>
+	<dict>
+		<key>com.apple.notifyd.matching</key>
+		<dict>
+			<key>com.apple.powermanagement.systempowerstate</key>
+			<dict>
+				<key>Notification</key>
+				<string>com.apple.powermanagement.systempowerstate</string>
+			</dict>
+			<key>com.apple.system.config.network_change</key>
+			<dict>
+				<key>Notification</key>
+				<string>com.apple.system.config.network_change</string>
+			</dict>
+		</dict>
+	</dict>
+	<key>ProcessType</key>
+	<string>Background</string>
+	<key>Program</key>
+	<string>/usr/local/share/smaddock/xpc_handler.js</string>
+	<key>StandardErrorPath</key>
+	<string>/private/var/log/smaddock.log</string>
+	<key>StandardOutPath</key>
+	<string>/private/var/log/smaddock.log</string>
+</dict>
+</plist>
