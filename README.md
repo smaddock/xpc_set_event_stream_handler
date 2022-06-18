@@ -1,5 +1,7 @@
 # xpc_handler
 
+A demonstration of using launchd LaunchEvents to trigger LaunchDaemons on-demand (as opposed to cron-like triggering) by taking advantage of Apple's XPC framework. This allows, for example, commands to be run when the network configuration or power state of a Mac changes.
+
 Port of [@snosrap](https://github.com/snosrap)'s [Objective-C XPC event handler](https://github.com/snosrap/xpc_set_event_stream_handler) to a [Javascript for Automation (JXA)](https://developer.apple.com/library/archive/releasenotes/InterapplicationCommunication/RN-JavaScriptForAutomation/Articles/Introduction.html) handler. Many thanks to [@PicoMitchell](https://github.com/PicoMitchell) for the JXA help!
 
 ## Notes
