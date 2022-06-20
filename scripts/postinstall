@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# (Re)load the launch daemon
+if launchctl print system/com.github.smaddock.xpc_handler &> /dev/null; then
+  launchctl kickstart -k system/com.github.smaddock.xpc_handler
+else
+  launchctl bootstrap system /Library/LaunchDaemons/com.github.smaddock.xpc_handler.plist
+  launchctl enable system/com.github.smaddock.xpc_handler
+fi

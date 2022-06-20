@@ -2,7 +2,9 @@
 
 A demonstration of using launchd LaunchEvents to trigger LaunchDaemons on-demand (as opposed to cron-like triggering) by taking advantage of Apple's XPC framework. This allows, for example, commands to be run when the network configuration or power state of a Mac changes.
 
-Port of [@snosrap](https://github.com/snosrap)'s [Objective-C XPC event handler](https://github.com/snosrap/xpc_set_event_stream_handler) to a [Javascript for Automation (JXA)](https://developer.apple.com/library/archive/releasenotes/InterapplicationCommunication/RN-JavaScriptForAutomation/Articles/Introduction.html) handler. Many thanks to [@PicoMitchell](https://github.com/PicoMitchell) for the JXA help!
+Feel free to use this example per the terms of the included license, although you'll probably want to remove the `smaddock` references from any production use. ;)
+
+This is a port of [@snosrap](https://github.com/snosrap)'s [Objective-C XPC event handler](https://github.com/snosrap/xpc_set_event_stream_handler) to a [Javascript for Automation (JXA)](https://developer.apple.com/library/archive/releasenotes/InterapplicationCommunication/RN-JavaScriptForAutomation/Articles/Introduction.html) handler. Many thanks to [@PicoMitchell](https://github.com/PicoMitchell) for the JXA help!
 
 ## Notes
 
@@ -16,11 +18,17 @@ Port of [@snosrap](https://github.com/snosrap)'s [Objective-C XPC event handler]
 
 To execute this example as-is:
 
-- Create a `/usr/local/share/smaddock/` directory owned by root
-- Move `event_processor.sh` and `xpc_handler.js` to that directory
-- Move `com.github.smaddock.xpc_handler.plist` to `/Library/LaunchDaemons/` and change the owner to `root`
-- Run `sudo launchctl bootstrap system/com.github.smaddock.xpc_handler`
-- Turn your WiFi off and on a couple times, and sleep and wake your Mac a couple times
-- Inspect `/private/var/log/smaddock.log` to see the logged events
-
-Feel free to use this example per the terms of the included license, although you'll probably want to remove the `smaddock` references from any production use. ;)
+1. Install the files
+    - munkipkg method:
+        1. Install [munkipkg](https://github.com/munki/munki-pkg)
+        1. Clone this repository locally
+        1. Run `munkipkg` on the repo local root directory
+        1. Run the installer built by `munkipkg`
+    - Manual method:
+        1. Copy the files from the payload directory of this repo to their corresponding location in your filesystem
+        1. Change the owner of all the copied files to `root`
+        1. Run `sudo launchctl bootstrap system /Library/LaunchDaemons/com.github.smaddock.xpc_handler.plist`
+1. Test the LaunchEvents
+    - Turn your WiFi off and on a couple times
+    - Sleep and wake your Mac a couple times
+1. Inspect `/private/var/log/smaddock.log` to see the logged events

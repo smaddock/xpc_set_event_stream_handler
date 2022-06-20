@@ -1,0 +1,10 @@
+{
+    "distribution_style": true,
+    "identifier": "com.github.smaddock.xpc_handler",
+    "install_location": "/",
+    "name": "xpc_handler.pkg",
+    "ownership": "recommended",
+    "postinstall_action": "none",
+    "suppress_bundle_relocation": true,
+    "version": "0.0.5"
+}

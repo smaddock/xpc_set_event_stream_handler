@@ -18,29 +18,24 @@
 
 ObjC.import('xpc')
 
-while (true) {
-	let xpcEventConsumed = false
-	let xpcEventName = ''
+const fileManager = $.NSFileManager.defaultManager
+const commandPath = $.NSProcessInfo.processInfo.environment.objectForKey('COMMAND_PATH')
+let execute
+if (!commandPath.isNil() && fileManager.fileExistsAtPath(commandPath) && fileManager.isExecutableFileAtPath(commandPath)) {
+	execute = true
+}
 
-	$.xpc_set_event_stream_handler('com.apple.notifyd.matching', $(), (xpcEvent) => {
-		xpcEventName = $.xpc_dictionary_get_string(xpcEvent, 'XPCEventName')
-		if (!xpcEventConsumed) {
-			xpcEventConsumed = true
-		}
-	})
-
-	while (!xpcEventConsumed) {
-		delay(1)
-	}
-
-	const fileManager = $.NSFileManager.defaultManager
-	const commandPath = $.NSProcessInfo.processInfo.environment.objectForKey('COMMAND_PATH')
-	if (!commandPath.isNil() && fileManager.fileExistsAtPath(commandPath) && fileManager.isExecutableFileAtPath(commandPath)) {
+$.xpc_set_event_stream_handler('com.apple.notifyd.matching', $(), (xpcEvent) => {
+	if (execute) {
 		$.NSTask.launchedTaskWithExecutableURLArgumentsErrorTerminationHandler(
 			$.NSURL.fileURLWithPath(commandPath),
-			[xpcEventName],
+			[$.xpc_dictionary_get_string(xpcEvent, 'XPCEventName')],
 			$(),
 			(thisTask) => { }
 		)
 	}
+})
+
+while (true) {
+	delay(1)
 }
